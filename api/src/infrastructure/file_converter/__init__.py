@@ -1,5 +1,3 @@
-from .adapter import FileConverterAdapter
+from . import fitz
 
-__all__ = [
-    "FileConverterAdapter",
-]
+__all__ = ["fitz"]

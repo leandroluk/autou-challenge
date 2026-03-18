@@ -21,15 +21,7 @@ class HttpServer:
             docs_url=config.docs_path,
             redoc_url=config.redoc_path,
         )
-        self.app.add_middleware(
-            CORSMiddleware,
-            allow_origins=["*"],
-            allow_methods=["*"],
-            allow_headers=["*"],
-        )
-        self._apply_routes()
-
-    def _apply_routes(self) -> None:
+        self.app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
         prefix = self.config.base_path.rstrip("/")
         for router in [email_router, system_router]:
             self.app.include_router(router, prefix=prefix)

@@ -16,8 +16,6 @@ def _get[T](key: str, default: T) -> Callable[[], T]:
             value = value.lower() == "true"
         elif isinstance(default, int):
             value = int(value)
-        elif isinstance(default, float):
-            value = float(value)
         return cast(T, value)
 
     return wrapper

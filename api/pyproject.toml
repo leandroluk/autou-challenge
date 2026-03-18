@@ -20,13 +20,13 @@ keywords = [
 ]
 classifiers = []
 dependencies = [
-    "fastapi>=0.111.0",
-    "httpx>=0.28.1",
-    "pydantic>=2.12.5",
-    "pymupdf>=1.27.2",
-    "pypdf>=6.9.1",
-    "python-multipart>=0.0.22",
-    "uvicorn[standard]>=0.29.0",
+  "fastapi>=0.111.0",
+  "httpx>=0.28.1",
+  "pydantic>=2.12.5",
+  "pymupdf>=1.27.2",
+  "pypdf>=6.9.1",
+  "python-multipart>=0.0.22",
+  "uvicorn[standard]>=0.29.0",
 ]
 
 [project.urls]
@@ -81,10 +81,11 @@ disallow_subclassing_any = false
 
 [tool.coverage.run]
 relative_files = true
+omit = ["**/__main__.py", "**/__init__.py", "**/fake/**"]
 
 [tool.pyright]
-include = ["src"]
-exclude = ["**/__pycache__", "**/test", "**/.venv"]
+include = ["src", "test"]
+exclude = ["**/__pycache__", "**/.venv"]
 pythonVersion = "3.13"
 typeCheckingMode = "strict"
 useLibraryCodeForTypes = true
@@ -100,3 +101,4 @@ reportGeneralTypeIssues = "warning"
 reportOptionalMemberAccess = "none"
 reportAttributeAccessIssue = "none"
 reportInvalidTypeVarUse = "none"
+executionEnvironments = [{ root = "test", reportPrivateUsage = "none" }]

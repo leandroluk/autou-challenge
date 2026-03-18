@@ -1,5 +1,3 @@
-from .adapter import EmailAnalyzerAdapter
+from . import fake, httpx
 
-__all__ = [
-    "EmailAnalyzerAdapter",
-]
+__all__ = ["fake", "httpx"]

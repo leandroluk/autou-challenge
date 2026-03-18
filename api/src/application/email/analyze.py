@@ -3,6 +3,7 @@ from pydantic import BaseModel, Field, model_validator
 from src.application._shared.container import injectable
 from src.domain._shared.ports.email_analyzer import (
     EmailAnalyzerPort,
+    EmailAnalyzerPortProvider,
     EmailAnalyzerPortProviderEnum,
 )
 from src.domain._shared.ports.file_converter import FileConverterPort
@@ -60,20 +61,25 @@ class EmailAnalyzeHandler:
         self._email_analyzer = email_analyzer
         self._file_converter = file_converter
 
+    async def _convert_file(
+        self,
+        file: tuple[str, bytes],
+        analyzer_provider: EmailAnalyzerPortProvider,
+    ) -> tuple[CategoryEnum, str]:
+        filename, content = file
+        try:
+            pages_data, mime_type = await self._file_converter.convert(filename, content)
+            if mime_type == "text/plain":
+                return await analyzer_provider.analyze_text("\n".join(pages_data))
+            return await analyzer_provider.analyze_file(pages_data, mime_type)
+        except Exception as e:
+            raise EmailConversionError(filename) from e
+
     async def execute(self, command: EmailAnalyzeQuery) -> EmailAnalyzerResult:
         analyzer_provider = self._email_analyzer.get_provider(command.provider, command.api_key)
         try:
             if command.file:
-                filename, content = command.file
-                try:
-                    pages_data, mime_type = await self._file_converter.convert(filename, content)
-                except Exception as e:
-                    raise EmailConversionError(filename) from e
-
-                if mime_type == "text/plain":
-                    category, suggested_reply = await analyzer_provider.analyze_text("\n".join(pages_data))
-                else:
-                    category, suggested_reply = await analyzer_provider.analyze_file(pages_data, mime_type)
+                category, suggested_reply = await self._convert_file(command.file, analyzer_provider)
             else:
                 category, suggested_reply = await analyzer_provider.analyze_text(command.text or "")
         except EmailConversionError:

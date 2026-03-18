@@ -49,6 +49,7 @@
   "python.analysis.autoImportCompletions": true,
   "python.terminal.useEnvFile": true,
   "python.analysis.diagnosticSeverityOverrides": {
+    "reportPrivateUsage": "none",
     "reportMissingTypeStubs": "none",
     "reportUnknownMemberType": "information",
     "reportUnknownVariableType": "information"
@@ -60,7 +61,7 @@
   "python.analysis.typeCheckingMode": "strict",
   "python.testing.cwd": "${workspaceFolder}",
   "python.testing.pytestArgs": [
-    "test"
+    "${workspaceFolder}/api/test"
   ],
   "python.testing.pytestEnabled": true,
   // #endregion
@@ -71,5 +72,6 @@
   "[dockercompose]": {
     "editor.formatOnSave": false
   },
+  "robotcode.disableExtension": true,
   // #endregion
 }

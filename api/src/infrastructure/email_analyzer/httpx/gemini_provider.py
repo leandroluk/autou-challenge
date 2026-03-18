@@ -6,10 +6,10 @@ import httpx
 
 from src.domain._shared.ports.email_analyzer import EmailAnalyzerPortProvider
 from src.domain.email.enums import CategoryEnum
-from src.infrastructure.email_analyzer._prompt import EMAIL_ANALYZER_SYSTEM_PROMPT
+from src.infrastructure.email_analyzer.httpx._prompt import EMAIL_ANALYZER_SYSTEM_PROMPT
 
 
-class GeminiEmailAnalyzerPortProvider(EmailAnalyzerPortProvider):
+class HttpxGeminiEmailAnalyzerPortProvider(EmailAnalyzerPortProvider):
     def __init__(self, api_key: str, model: str) -> None:
         self._api_key = api_key
         self._model = model
