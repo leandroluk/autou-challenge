@@ -1,0 +1,75 @@
+{
+  // #region editor
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always",
+    "source.organizeLinkDefinitions": "always",
+  },
+  "editor.detectIndentation": false,
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "file",
+  "editor.formatOnType": true,
+  "editor.tabSize": 2,
+  // #endregion
+  // #region files
+  "files.encoding": "utf8",
+  "files.eol": "\n",
+  "files.exclude": {
+    ".cache": true,
+    ".coverage": true,
+    "**/__pycache__": true,
+    "**/.DS_Store": true,
+    "**/.git": true,
+    "**/.hg": true,
+    "**/.mypy_cache": true,
+    "**/.pytest_cache": true,
+    "**/.ruff_cache": true,
+    "**/.svn": true,
+    "**/*.egg-info": true,
+    "**/*.pyc": true,
+    "**/build": true,
+    "**/dist": true,
+    "**/Thumbs.db": true
+  },
+  "files.trimFinalNewlines": true,
+  "files.trimTrailingWhitespace": true,
+  // #endregion
+  // #region python
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.ruff": "explicit",
+      "source.organizeImports.ruff": "explicit"
+    },
+    "editor.tabSize": 4,
+    "editor.rulers": [
+      120
+    ],
+  },
+  "python.analysis.autoImportCompletions": true,
+  "python.terminal.useEnvFile": true,
+  "python.analysis.diagnosticSeverityOverrides": {
+    "reportMissingTypeStubs": "none",
+    "reportUnknownMemberType": "information",
+    "reportUnknownVariableType": "information"
+  },
+  "python.analysis.extraPaths": [
+    "${workspaceFolder}/api",
+    "${workspaceFolder}/api/src"
+  ],
+  "python.analysis.typeCheckingMode": "strict",
+  "python.testing.cwd": "${workspaceFolder}",
+  "python.testing.pytestArgs": [
+    "test"
+  ],
+  "python.testing.pytestEnabled": true,
+  // #endregion
+  // #region ruff
+  "ruff.enable": true,
+  // #endregion
+  // #region docker
+  "[dockercompose]": {
+    "editor.formatOnSave": false
+  },
+  // #endregion
+}
