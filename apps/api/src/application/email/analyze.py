@@ -12,6 +12,10 @@ from src.domain.email.errors import EmailAnalyzerError, EmailConversionError
 
 
 class EmailAnalyzeQuery(BaseModel):
+    """
+    Query for analyzing an email.
+    """
+
     provider: EmailAnalyzerPortProviderEnum = Field(
         description="LLM provider",
         examples=[EmailAnalyzerPortProviderEnum.OPENAI_GPT_4O_MINI],
@@ -41,6 +45,10 @@ class EmailAnalyzeQuery(BaseModel):
 
 
 class EmailAnalyzerResult(BaseModel):
+    """
+    Result of analyzing an email.
+    """
+
     category: str = Field(
         description="Category of the email",
         examples=[key.value for key in CategoryEnum],
@@ -54,6 +62,10 @@ class EmailAnalyzerResult(BaseModel):
 
 @injectable
 class EmailAnalyzeHandler:
+    """
+    Handler for analyzing an email.
+    """
+
     _email_analyzer: EmailAnalyzerPort
     _file_converter: FileConverterPort
 

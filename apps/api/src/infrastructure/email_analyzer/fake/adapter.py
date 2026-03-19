@@ -7,6 +7,10 @@ from src.domain.email.enums import CategoryEnum
 
 
 class FakeEmailAnalyzerPortProvider(EmailAnalyzerPortProvider):
+    """
+    Fake implementation of EmailAnalyzerPortProvider.
+    """
+
     async def analyze_text(self, text: str) -> tuple[CategoryEnum, str]:
         return CategoryEnum.PRODUCTIVE, "Fake reply"
 
@@ -15,5 +19,9 @@ class FakeEmailAnalyzerPortProvider(EmailAnalyzerPortProvider):
 
 
 class FakeEmailAnalyzerAdapter(EmailAnalyzerPort):
+    """
+    Fake implementation of EmailAnalyzerPort.
+    """
+
     def get_provider(self, provider: EmailAnalyzerPortProviderEnum, api_key: str) -> EmailAnalyzerPortProvider:
         return FakeEmailAnalyzerPortProvider()

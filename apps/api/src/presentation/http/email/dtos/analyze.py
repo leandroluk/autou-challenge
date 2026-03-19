@@ -6,6 +6,10 @@ from src.domain._shared.ports.email_analyzer import EmailAnalyzerPortProviderEnu
 
 
 class EmailAnalyzeRequestBody(BaseModel):
+    """
+    Request body for analyzing an email.
+    """
+
     provider: str = Field(
         description="Provider used to analyze email",
         json_schema_extra={"enum": [e.value for e in EmailAnalyzerPortProviderEnum]},
@@ -24,4 +28,9 @@ class EmailAnalyzeRequestBody(BaseModel):
     )
 
 
-class EmailAnalyzeResponse(EmailAnalyzerResult): ...
+class EmailAnalyzeResponse(EmailAnalyzerResult):
+    """
+    Response body for analyzing an email.
+    """
+
+    pass

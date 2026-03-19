@@ -12,6 +12,10 @@ def injectable[T](cls: None = None, *, as_type: type) -> Callable[[type[T]], typ
 
 
 def injectable(cls: type | None = None, *, as_type: type | None = None) -> type | Callable[[type], type]:
+    """
+    Decorator to register a class as injectable.
+    """
+
     def decorator(c: type) -> type:
         key = as_type if as_type is not None else c
         _registry[key] = c
@@ -23,12 +27,18 @@ def injectable(cls: type | None = None, *, as_type: type | None = None) -> type 
 
 
 def register(key: type, impl: type) -> None:
+    """
+    Register a class as injectable.
+    """
     _registry[key] = impl
     if key in _instances:
         del _instances[key]
 
 
 def resolve[T](t: type[T]) -> T:
+    """
+    Resolve a class as injectable.
+    """
     if t in _instances:
         return _instances[t]
 
@@ -49,5 +59,8 @@ def resolve[T](t: type[T]) -> T:
 
 
 def clear() -> None:
+    """
+    Clear the container.
+    """
     _registry.clear()
     _instances.clear()

@@ -31,6 +31,10 @@ async def analyze(
     handler: Annotated[EmailAnalyzeHandler, Depends(lambda: resolve(EmailAnalyzeHandler))],
     request: Request,
 ):
+    """
+    Analyze an email.
+    """
+
     form = await request.form()
     file = cast(UploadFile | None, form.get("file"))
     file_data = (file.filename, await file.read()) if file and file.filename else None

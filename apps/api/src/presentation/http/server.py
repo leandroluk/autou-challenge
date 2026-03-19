@@ -9,6 +9,10 @@ from src.presentation.http.system.router import router as system_router
 
 @injectable
 class HttpServer:
+    """
+    HTTP server for the application.
+    """
+
     config: HttpConfig
     app: FastAPI
 

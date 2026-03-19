@@ -26,6 +26,10 @@ _PROVIDER_MODELS: dict[EmailAnalyzerPortProviderEnum, tuple[type, str]] = {
 
 @injectable(as_type=EmailAnalyzerPort)
 class HttpxEmailAnalyzerAdapter(EmailAnalyzerPort):
+    """
+    HTTPX implementation of EmailAnalyzerPort.
+    """
+
     def get_provider(self, provider: EmailAnalyzerPortProviderEnum, api_key: str) -> EmailAnalyzerPortProvider:
         adapter_cls, model = _PROVIDER_MODELS[provider]
         return adapter_cls(api_key=api_key, model=model)

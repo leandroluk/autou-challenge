@@ -8,6 +8,10 @@ from src.application._shared.container import injectable
 
 
 def _get[T](key: str, default: T) -> Callable[[], T]:
+    """
+    Get an environment variable with a default value.
+    """
+
     def wrapper() -> T:
         value = os.getenv(key)
         if value is None:
@@ -23,6 +27,10 @@ def _get[T](key: str, default: T) -> Callable[[], T]:
 
 @injectable
 class HttpConfig(BaseModel):
+    """
+    Configuration for the HTTP server.
+    """
+
     host: str = Field(default_factory=_get("HTTP_HOST", "127.0.0.1"))
     port: int = Field(default_factory=_get("HTTP_PORT", 8000))
     base_path: str = Field(default_factory=_get("HTTP_BASE_PATH", "/api/v1"))

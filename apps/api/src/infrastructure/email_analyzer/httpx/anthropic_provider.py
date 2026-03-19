@@ -10,6 +10,10 @@ from src.infrastructure.email_analyzer.httpx._prompt import EMAIL_ANALYZER_SYSTE
 
 
 class HttpxAnthropicEmailAnalyzerPortProvider(EmailAnalyzerPortProvider):
+    """
+    HTTPX implementation of EmailAnalyzerPortProvider for Anthropic.
+    """
+
     def __init__(self, api_key: str, model: str) -> None:
         self._api_key = api_key
         self._model = model
