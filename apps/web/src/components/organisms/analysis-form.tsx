@@ -31,7 +31,7 @@ export function AnalysisForm({
 }) {
   const form = useForm({
     defaultValues: {
-      provider: EmailAnalyzerPortProviderEnum.GEMINI_2_5_FLASH,
+      provider: "" as EmailAnalyzerPortProviderEnum,
       apiKey: "",
       method: "text",
       text: "",
@@ -68,8 +68,12 @@ export function AnalysisForm({
                   value={field.state.value}
                   onValueChange={(val) => field.handleChange(val as EmailAnalyzerPortProviderEnum)}
                 >
-                  <SelectTrigger id={field.name} className="w-full">
-                    <SelectValue />
+                  <SelectTrigger
+                    data-testid="analysis-form_select_provider"
+                    id={field.name}
+                    className="w-full"
+                  >
+                    <SelectValue placeholder="Select an provider" />
                   </SelectTrigger>
                   <SelectContent>
                     {Object.values(EmailAnalyzerPortProviderEnum).map((provider, key) => (
@@ -88,6 +92,7 @@ export function AnalysisForm({
               <FieldLabel htmlFor={field.name}>Provider API Key</FieldLabel>
               <FieldContent>
                 <Input
+                  data-testid="analysis-form_input_api-key"
                   id={field.name}
                   type="password"
                   value={field.state.value}
@@ -110,10 +115,10 @@ export function AnalysisForm({
             className="w-full"
           >
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="text" className="gap-2">
+              <TabsTrigger value="text" className="gap-2" data-testid="analysis-form_tab_text">
                 <TypeIcon className="size-4" /> Direct Text
               </TabsTrigger>
-              <TabsTrigger value="file" className="gap-2">
+              <TabsTrigger value="file" className="gap-2" data-testid="analysis-form_tab_file">
                 <FileTextIcon className="size-4" /> File Upload
               </TabsTrigger>
             </TabsList>
@@ -125,6 +130,7 @@ export function AnalysisForm({
                     <FieldLabel htmlFor={textField.name}>Paste email content here</FieldLabel>
                     <FieldContent>
                       <Textarea
+                        data-testid="analysis-form_textarea_text"
                         id={textField.name}
                         value={textField.state.value ?? ""}
                         onBlur={textField.handleBlur}
@@ -146,6 +152,7 @@ export function AnalysisForm({
                     <FieldLabel htmlFor={fileField.name}>Email File</FieldLabel>
                     <FieldContent>
                       <Input
+                        data-testid="analysis-form_input_file"
                         id={fileField.name}
                         type="file"
                         accept=".pdf,.txt"
@@ -163,7 +170,12 @@ export function AnalysisForm({
 
       <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting]}>
         {([canSubmit, isSubmitting]) => (
-          <Button type="submit" className="w-full" disabled={!canSubmit || isSubmitting || loading}>
+          <Button
+            data-testid="analysis-form_button_submit"
+            type="submit"
+            className="w-full"
+            disabled={!canSubmit || isSubmitting || loading}
+          >
             {loading || isSubmitting ? (
               <>
                 <Loader2Icon className="size-4 animate-spin" /> Processing...
