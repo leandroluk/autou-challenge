@@ -3,7 +3,7 @@
 import { Button } from "@/components/atoms/button"
 import { Field, FieldContent, FieldError, FieldGroup, FieldLabel } from "@/components/atoms/field"
 import { Input } from "@/components/atoms/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/atoms/select"
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/atoms/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/atoms/tabs"
 import { Textarea } from "@/components/atoms/textarea"
 import { EmailAnalyzerPortProviderEnum } from "@/domain/_shared/ports/email-analyzer"
@@ -73,12 +73,15 @@ export function AnalysisForm({
                     id={field.name}
                     className="w-full"
                   >
-                    <SelectValue placeholder="Select an provider" />
+                    <SelectValue placeholder="Select an analysis provider" />
                   </SelectTrigger>
                   <SelectContent>
-                    {Object.values(EmailAnalyzerPortProviderEnum).map((provider, key) => (
-                      <SelectItem key={key} value={provider}>{provider}</SelectItem>
-                    ))}
+                    <SelectGroup>
+                      <SelectLabel>Select an analysis provider</SelectLabel>
+                      {Object.values(EmailAnalyzerPortProviderEnum).map((provider, key) => (
+                        <SelectItem key={key} value={provider}>{provider}</SelectItem>
+                      ))}
+                    </SelectGroup>
                   </SelectContent>
                 </Select>
               </FieldContent>
