@@ -1,7 +1,27 @@
+# env files
 .env
+.env.local
 
-uv.lock
+# local package management
 .venv
+node_modules
+
+# project files
+uv.lock
+.next
+
+# coverage files
+.coverage
+
+# build files
+*.tar.gz
+*.whl
+dist
+build
+*.egg-info
+
+# cache files
 __pycache__
 .pytest_cache
-.coverage
+.ruff_cache
+.mypy_cache

@@ -1,0 +1,51 @@
+{
+  "name": "autou-challenge-web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev",
+    "test": "vitest run",
+    "test-cov": "vitest run --coverage",
+    "lint": "eslint .",
+    "format": "eslint . --fix",
+    "docker-build": "docker build -t autou-challenge-web .",
+    "docker-run": "docker run --rm -p 3000:3000 autou-challenge-web"
+  },
+  "dependencies": {
+    "@base-ui/react": "1.3.0",
+    "@hugeicons/core-free-icons": "4.0.0",
+    "@hugeicons/react": "1.1.6",
+    "@tanstack/react-form": "1.28.5",
+    "@tanstack/zod-form-adapter": "0.42.1",
+    "@uiw/react-github-corners": "1.5.16",
+    "class-variance-authority": "0.7.1",
+    "clsx": "2.1.1",
+    "lucide-react": "0.577.0",
+    "next": "16.2.0",
+    "radix-ui": "1.4.3",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "shadcn": "4.0.8",
+    "sonner": "2.0.7",
+    "tailwind-merge": "3.5.0",
+    "tw-animate-css": "1.4.0",
+    "zod": "4.3.6"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.2.2",
+    "@testing-library/dom": "10.4.1",
+    "@testing-library/react": "16.3.2",
+    "@types/node": "^25.5.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "6.0.1",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "16.2.0",
+    "jsdom": "29.0.0",
+    "tailwindcss": "^4.2.2",
+    "typescript": "^5.9.3",
+    "vitest": "4.1.0"
+  },
+  "packageManager": "pnpm@10.29.3+sha512.498e1fb4cca5aa06c1dcf2611e6fafc50972ffe7189998c409e90de74566444298ffe43e6cd2acdc775ba1aa7cc5e092a8b7054c811ba8c5770f84693d33d2dc"
+}

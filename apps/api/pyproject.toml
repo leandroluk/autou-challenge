@@ -1,0 +1,33 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "autou-challenge-api"
+version = "0.1.0"
+description = "Autou Challenge API"
+requires-python = ">=3.13"
+dependencies = [
+  "fastapi>=0.111.0",
+  "httpx>=0.28.1",
+  "pydantic>=2.12.5",
+  "pymupdf>=1.27.2",
+  "pypdf>=6.9.1",
+  "python-multipart>=0.0.22",
+  "uvicorn[standard]>=0.29.0",
+]
+
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+
+[tool.uv]
+package = true
+
+[tool.coverage.run]
+relative_files = true
+omit = ["**/__main__.py", "**/__init__.py", "**/fake/**"]

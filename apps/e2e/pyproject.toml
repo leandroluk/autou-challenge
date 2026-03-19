@@ -1,0 +1,17 @@
+[project]
+name = "e2e"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+  "faker>=40.1.2",
+  "psycopg2>=2.9.11",
+  "python-dotenv>=1.2.1",
+  "robotframework>=7.4.1",
+  "robotframework-databaselibrary>=2.4.1",
+  "robotframework-imaplibrary2>=0.4.11",
+  "robotframework-requests>=0.9.7",
+  "robotframework-robocop>=7.2.0",
+  "robotframework-seleniumlibrary>=6.8.0",
+]

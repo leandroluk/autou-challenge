@@ -6,10 +6,10 @@
       "type": "debugpy",
       "request": "launch",
       "module": "src",
-      "cwd": "${workspaceFolder}/api",
+      "cwd": "${workspaceFolder}/apps/api",
       "console": "integratedTerminal",
       "env": {
-        "PYTHONPATH": "${workspaceFolder}/api"
+        "PYTHONPATH": "${workspaceFolder}/apps/api"
       }
     },
     {
@@ -17,20 +17,20 @@
       "type": "node-terminal",
       "request": "launch",
       "command": "npm run dev -- --inspect",
-      "cwd": "${workspaceFolder}/web"
+      "cwd": "${workspaceFolder}/apps/web"
     },
     {
       "name": "web:client",
       "type": "chrome",
       "request": "launch",
       "url": "http://localhost:3000",
-      "webRoot": "${workspaceFolder}/web"
+      "webRoot": "${workspaceFolder}/apps/web"
     },
     {
       "name": "web:full",
       "type": "node",
       "request": "launch",
-      "program": "${workspaceFolder}/web/node_modules/next/dist/bin/next",
+      "program": "${workspaceFolder}/apps/web/node_modules/next/dist/bin/next",
       "runtimeArgs": [
         "--inspect"
       ],
@@ -42,7 +42,7 @@
         "killOnServerStop": true,
         "pattern": "- Local:.+(https?://.+)",
         "uriFormat": "%s",
-        "webRoot": "${workspaceFolder}/web"
+        "webRoot": "${workspaceFolder}/apps/web"
       }
     }
   ]
