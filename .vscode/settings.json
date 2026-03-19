@@ -57,14 +57,18 @@
     "reportUnknownVariableType": "information"
   },
   "python.analysis.extraPaths": [
-    "${workspaceFolder}/api",
-    "${workspaceFolder}/api/src"
+    "${workspaceFolder}/apps/api",
+    "${workspaceFolder}/apps/e2e"
   ],
   "python.analysis.typeCheckingMode": "strict",
   "python.testing.cwd": "${workspaceFolder}",
   "python.testing.pytestArgs": [
-    "${workspaceFolder}/api/test"
+    "${workspaceFolder}/apps/api/test",
+    "${workspaceFolder}/apps/e2e/test",
+    "--rootdir=${workspaceFolder}",
+    "--import-mode=importlib"
   ],
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
   "python.testing.pytestEnabled": true,
   // #endregion
   // #region ruff
@@ -74,9 +78,15 @@
   "[dockercompose]": {
     "editor.formatOnSave": false
   },
-  "robotcode.disableExtension": true,
   // #endregion
   // #region css
   "css.lint.unknownAtRules": "ignore",
+  // #endregion
+  // #region robot
+  "robotcode.robot.pythonPath": [
+    "apps/e2e"
+  ],
+  "robotcode.testExplorer.enabled": true,
+  "robotcode.disableExtension": false,
   // #endregion
 }
