@@ -2,7 +2,9 @@
   // #region editor
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "always",
-    "source.organizeLinkDefinitions": "always",
+    "source.organizeImports": "always",
+    "source.removeUnusedImports": "always",
+    "source.sortImports": "always"
   },
   "editor.detectIndentation": false,
   "editor.formatOnPaste": true,
@@ -10,6 +12,9 @@
   "editor.formatOnSaveMode": "file",
   "editor.formatOnType": true,
   "editor.tabSize": 2,
+  "editor.rulers": [
+    120
+  ],
   // #endregion
   // #region files
   "files.encoding": "utf8",
@@ -42,9 +47,6 @@
       "source.organizeImports.ruff": "explicit"
     },
     "editor.tabSize": 4,
-    "editor.rulers": [
-      120
-    ],
   },
   "python.analysis.autoImportCompletions": true,
   "python.terminal.useEnvFile": true,
@@ -73,5 +75,8 @@
     "editor.formatOnSave": false
   },
   "robotcode.disableExtension": true,
+  // #endregion
+  // #region css
+  "css.lint.unknownAtRules": "ignore",
   // #endregion
 }

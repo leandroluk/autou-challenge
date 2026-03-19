@@ -11,6 +11,39 @@
       "env": {
         "PYTHONPATH": "${workspaceFolder}/api"
       }
+    },
+    {
+      "name": "web:server",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm run dev -- --inspect",
+      "cwd": "${workspaceFolder}/web"
+    },
+    {
+      "name": "web:client",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}/web"
+    },
+    {
+      "name": "web:full",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/web/node_modules/next/dist/bin/next",
+      "runtimeArgs": [
+        "--inspect"
+      ],
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "serverReadyAction": {
+        "action": "debugWithEdge",
+        "killOnServerStop": true,
+        "pattern": "- Local:.+(https?://.+)",
+        "uriFormat": "%s",
+        "webRoot": "${workspaceFolder}/web"
+      }
     }
   ]
 }
