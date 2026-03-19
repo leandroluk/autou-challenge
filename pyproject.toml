@@ -23,8 +23,6 @@ dependencies = [
   "fastapi>=0.111.0",
   "httpx>=0.28.1",
   "pydantic>=2.12.5",
-  "pymupdf>=1.27.2",
-  "pypdf>=6.9.1",
   "python-multipart>=0.0.22",
   "uvicorn[standard]>=0.29.0",
 ]

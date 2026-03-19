@@ -1,3 +1,3 @@
-from . import fitz
+from . import pymupdf
 
-__all__ = ["fitz"]
+__all__ = ["pymupdf"]

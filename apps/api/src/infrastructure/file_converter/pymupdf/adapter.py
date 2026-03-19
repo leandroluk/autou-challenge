@@ -1,24 +1,24 @@
 import base64
 from typing import Any, Protocol, cast
 
-import fitz
+import pymupdf
 
 from src.application._shared.container import injectable
 from src.domain._shared.ports.file_converter import FileConverterPort
 
 
-class _FitzPixmapProtocol(Protocol):
+class _PymupdfPixmapProtocol(Protocol):
     def tobytes(self, output: str) -> bytes: ...
 
 
-class _FitzPageProtocol(Protocol):
-    def get_pixmap(self, *, matrix: Any) -> _FitzPixmapProtocol: ...
+class _PymupdfPageProtocol(Protocol):
+    def get_pixmap(self, *, matrix: Any) -> _PymupdfPixmapProtocol: ...
 
 
 @injectable(as_type=FileConverterPort)
-class FileConverterAdapter(FileConverterPort):
+class PyMuPDFFileConverterAdapter(FileConverterPort):
     """
-    Adapter for converting files using Fitz.
+    Adapter for converting files using PyMuPDF.
     """
 
     def _pdf_to_pages(self, content: bytes) -> list[str]:
@@ -26,9 +26,9 @@ class FileConverterAdapter(FileConverterPort):
         Convert PDF content to a list of base64-encoded PNG images.
         """
         pages: list[str] = []
-        with fitz.open(stream=content, filetype="pdf") as doc:
+        with pymupdf.open(stream=content, filetype="pdf") as doc:
             for page in doc:
-                pix = cast(_FitzPageProtocol, page).get_pixmap(matrix=fitz.Matrix(2, 2))
+                pix = cast(_PymupdfPageProtocol, page).get_pixmap(matrix=pymupdf.Matrix(2, 2))
                 pages.append(base64.b64encode(pix.tobytes("png")).decode())
         return pages
 
