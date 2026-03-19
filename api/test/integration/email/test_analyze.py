@@ -21,4 +21,4 @@ async def test_post_email_analyze_success(http_client: AsyncClient):
 
     res_data = response.json()
     assert res_data["category"] == "Productive"
-    assert "suggested_reply" in res_data
+    assert "reply" in res_data

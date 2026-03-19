@@ -62,6 +62,6 @@ class HttpxGeminiEmailAnalyzerPortProvider(EmailAnalyzerPortProvider):
         raw = re.sub(r"\s*```$", "", raw)
         try:
             data = json.loads(raw)
-            return (CategoryEnum(data["category"]), data["suggested_reply"])
+            return (CategoryEnum(data["category"]), data["reply"])
         except (json.JSONDecodeError, KeyError, ValueError) as e:
             raise Exception(f"Unexpected model output: {e}") from e

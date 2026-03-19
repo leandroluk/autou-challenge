@@ -28,7 +28,7 @@ async def test_analyze_text_success(
         "choices": [
             {
                 "message": {
-                    "content": '{"category": "Productive", "suggested_reply": "reply text"}',
+                    "content": '{"category": "Productive", "reply": "reply text"}',
                 }
             }
         ]
@@ -99,7 +99,7 @@ async def test_analyze_file_success(
         "choices": [
             {
                 "message": {
-                    "content": '{"category": "Unproductive", "suggested_reply": "file text"}',
+                    "content": '{"category": "Unproductive", "reply": "file text"}',
                 }
             }
         ]

@@ -46,7 +46,7 @@ class EmailAnalyzerResult(BaseModel):
         examples=[key.value for key in CategoryEnum],
         json_schema_extra={"enum": [e.value for e in CategoryEnum]},
     )
-    suggested_reply: str = Field(
+    reply: str = Field(
         description="Suggested reply to the email",
         examples=["Thank you for your email. I will get back to you as soon as possible."],
     )
@@ -79,11 +79,11 @@ class EmailAnalyzeHandler:
         analyzer_provider = self._email_analyzer.get_provider(command.provider, command.api_key)
         try:
             if command.file:
-                category, suggested_reply = await self._convert_file(command.file, analyzer_provider)
+                category, reply = await self._convert_file(command.file, analyzer_provider)
             else:
-                category, suggested_reply = await analyzer_provider.analyze_text(command.text or "")
+                category, reply = await analyzer_provider.analyze_text(command.text or "")
         except EmailConversionError:
             raise
         except Exception as e:
             raise EmailAnalyzerError(str(e))
-        return EmailAnalyzerResult(category=category.value, suggested_reply=suggested_reply)
+        return EmailAnalyzerResult(category=category.value, reply=reply)

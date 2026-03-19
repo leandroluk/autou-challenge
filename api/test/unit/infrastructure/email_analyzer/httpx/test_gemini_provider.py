@@ -30,7 +30,7 @@ async def test_analyze_text_success(
                 "content": {
                     "parts": [
                         {
-                            "text": '{"category": "Productive", "suggested_reply": "gemini text"}',
+                            "text": '{"category": "Productive", "reply": "gemini text"}',
                         }
                     ]
                 }
@@ -103,7 +103,7 @@ async def test_analyze_file_success(
                 "content": {
                     "parts": [
                         {
-                            "text": '{"category": "Unproductive", "suggested_reply": "g"}',
+                            "text": '{"category": "Unproductive", "reply": "g"}',
                         }
                     ]
                 }

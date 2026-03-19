@@ -70,7 +70,7 @@ async def test_execute_with_text(
     mock_provider.analyze_text.assert_called_once_with("hello")
     mock_provider.analyze_file.assert_not_called()
     assert result.category == CategoryEnum.UNPRODUCTIVE.value
-    assert result.suggested_reply == "mocked text reply"
+    assert result.reply == "mocked text reply"
 
 
 @pytest.mark.asyncio
@@ -91,7 +91,7 @@ async def test_execute_with_file_pdf(
     mock_provider.analyze_file.assert_called_once_with(["b64page1"], "image/png")
     mock_provider.analyze_text.assert_not_called()
     assert result.category == CategoryEnum.PRODUCTIVE.value
-    assert result.suggested_reply == "mocked file reply"
+    assert result.reply == "mocked file reply"
 
 
 @pytest.mark.asyncio

@@ -27,7 +27,7 @@ async def test_analyze_text_success(
     mock_response.json.return_value = {
         "content": [
             {
-                "text": '{"category": "Productive", "suggested_reply": "claude text"}',
+                "text": '{"category": "Productive", "reply": "claude text"}',
             }
         ]
     }
@@ -94,7 +94,7 @@ async def test_analyze_file_success(
     mock_response.json.return_value = {
         "content": [
             {
-                "text": '{"category": "Unproductive", "suggested_reply": "c"}',
+                "text": '{"category": "Unproductive", "reply": "c"}',
             }
         ]
     }
