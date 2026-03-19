@@ -5,6 +5,7 @@
 # local package management
 .venv
 node_modules
+pnpm-lock.yaml
 
 # project files
 uv.lock
@@ -29,3 +30,6 @@ __pycache__
 
 # e2e specific files
 .robot
+
+# web obfuscation files
+apps/web/css-obfuscator
