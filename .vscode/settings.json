@@ -88,5 +88,6 @@
   ],
   "robotcode.testExplorer.enabled": true,
   "robotcode.disableExtension": false,
+  "robotcode.robot.outputDir": "apps/e2e/.robot"
   // #endregion
 }

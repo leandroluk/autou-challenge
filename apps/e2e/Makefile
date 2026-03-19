@@ -1,19 +1,16 @@
 ROOT_DIR := ../..
-.DEFAULT_GOAL := dev
+.DEFAULT_GOAL := run
 
-.PHONY: install test test-cov lint format
+.PHONY: install test lint format
 
 install:
 	uv sync
 
 test:
-	@echo "Running tests..."
-
-test-cov:
-	@echo "Running tests with coverage..."
+	uv run robot --outputdir .robot test
 
 lint:
-	@echo "Running lint..."
+	uv run robocop check test
 
 format:
-	@echo "Running format..."
+	uv run robocop format test
