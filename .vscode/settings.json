@@ -78,6 +78,12 @@
   "[dockercompose]": {
     "editor.formatOnSave": false
   },
+  "[dockerfile]": {
+    "editor.quickSuggestions": {
+      "strings": true
+    },
+    "editor.tabSize": 4
+  },
   // #endregion
   // #region css
   "css.lint.unknownAtRules": "ignore",
