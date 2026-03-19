@@ -5,6 +5,7 @@ ROOT_DIR := ../..
 
 install:
 	uv sync
+	uv run python -m Browser.entry init
 
 test:
 	uv run robot --outputdir .robot test

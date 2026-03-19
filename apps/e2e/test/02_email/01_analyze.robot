@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation       E2E tests for the email analyze endpoint.
+Documentation       E2E tests for the email analyze UI.
 
 Resource            ../../resource/util.resource
 
@@ -11,55 +11,53 @@ Suite Teardown      Teardown Test Suite
 ${EMAIL_FILE_PDF_PATH}      ${CURDIR}/../../resource/email.pdf
 ${EMAIL_FILE_TXT_PATH}      ${CURDIR}/../../resource/email.txt
 ${EMAIL_TEXT_CONTENT}       Subject: Test\n\nThis is a test email body.
-${EMAIL_ANALYZE_PATH}       /api/v1/email/analyze
+
+${SEL_PROVIDER}             [data-testid=analysis-form_select_provider]
+${SEL_API_KEY}              [data-testid=analysis-form_input_api-key]
+${SEL_TAB_TEXT}             [data-testid=analysis-form_tab_text]
+${SEL_TAB_FILE}             [data-testid=analysis-form_tab_file]
+${SEL_TEXTAREA}             [data-testid=analysis-form_textarea_text]
+${SEL_INPUT_FILE}           [data-testid=analysis-form_input_file]
+${SEL_SUBMIT}               [data-testid=analysis-form_button_submit]
 
 
 *** Test Cases ***
-Verify API Email Analyze With Text
-    [Documentation]    Analyze email using plain text
-    ${json}=    Do Email Analyze Request With Text    ${EMAIL_TEXT_CONTENT}
-    Validate Email Analyze Response    ${json}
+Verify Email Analyze With Text
+    [Documentation]    Analyze email using plain text via UI
+    Fill Provider Fields
+    Click    ${SEL_TAB_TEXT}
+    Fill Text    ${SEL_TEXTAREA}    ${EMAIL_TEXT_CONTENT}
+    Click    ${SEL_SUBMIT}
+    Wait For Elements State    text=Category    visible    timeout=30s
 
-Verify API Email Analyze With PDF File
-    [Documentation]    Analyze email using PDF file
-    ${json}=    Do Email Analyze Request With File    ${EMAIL_FILE_PDF_PATH}    "application/pdf"
-    Validate Email Analyze Response    ${json}
+Verify Email Analyze With PDF File
+    [Documentation]    Analyze email using PDF file via UI
+    Fill Provider Fields
+    Click    ${SEL_TAB_FILE}
+    Upload File By Selector    ${SEL_INPUT_FILE}    ${EMAIL_FILE_PDF_PATH}
+    Click    ${SEL_SUBMIT}
+    Wait For Elements State    text=Category    visible    timeout=30s
 
-Verify API Email Analyze With TXT File
-    [Documentation]    Analyze email using TXT file
-    ${json}=    Do Email Analyze Request With File    ${EMAIL_FILE_TXT_PATH}    "text/plain"
-    Validate Email Analyze Response    ${json}
+Verify Email Analyze With TXT File
+    [Documentation]    Analyze email using TXT file via UI
+    Fill Provider Fields
+    Click    ${SEL_TAB_FILE}
+    Upload File By Selector    ${SEL_INPUT_FILE}    ${EMAIL_FILE_TXT_PATH}
+    Click    ${SEL_SUBMIT}
+    Wait For Elements State    text=Category    visible    timeout=30s
 
 
 *** Keywords ***
 Setup Test Suite
-    [Documentation]    Initializes API session
-    Create Session    session    ${API_BASE_URL}    verify=True
+    [Documentation]    Opens browser and navigates to the app
+    New Browser    chromium    headless=${HEADLESS}
+    New Page    ${WEB_BASE_URL}
 
 Teardown Test Suite
-    [Documentation]    Closes all sessions
-    Delete All Sessions
+    [Documentation]    Closes browser
+    Close Browser
 
-Do Email Analyze Request With Text
-    [Documentation]    Sends email analyze request using text
-    [Arguments]    ${text}
-    VAR    &{data}=    provider=${EMAIL_ANALYSIS_PROVIDER}    api_key=${GEMINI_API_KEY}    text=${text}
-    ${response}=    POST On Session    session    ${EMAIL_ANALYZE_PATH}    data=${data}
-    RETURN    ${response.json()}
-
-Do Email Analyze Request With File
-    [Documentation]    Sends email analyze request using file
-    [Arguments]    ${file_path}    ${mime_type}
-    VAR    &{data}=    provider=${EMAIL_ANALYSIS_PROVIDER}    api_key=${GEMINI_API_KEY}
-    ${file_tuple}=    Evaluate    ("file", open($file_path, "rb"), $mime_type)
-    VAR    &{files}=    file=${file_tuple}
-    ${response}=    POST On Session    session    ${EMAIL_ANALYZE_PATH}    data=${data}    files=${files}
-    RETURN    ${response.json()}
-
-Validate Email Analyze Response
-    [Documentation]    Validates the email analyze response keys
-    [Arguments]    ${json}
-    Dictionary Should Contain Key    ${json}    category
-    Dictionary Should Contain Key    ${json}    reply
-    Should Not Be Empty    ${json}[category]    msg=Category is empty
-    Should Not Be Empty    ${json}[reply]    msg=Reply is empty
+Fill Provider Fields
+    [Documentation]    Fills provider and API key fields
+    Select Option By    ${SEL_PROVIDER}    ${EMAIL_ANALYSIS_PROVIDER}
+    Fill Text    ${SEL_API_KEY}    ${GEMINI_API_KEY}
