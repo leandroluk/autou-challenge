@@ -3,8 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "prepare": "tw-patch install",
-    "build": "next build --webpack && next-css-obfuscator && rimraf css-obfuscator",
+    "build": "rimraf .next && next build --webpack && next-css-obfuscator && rimraf css-obfuscator",
     "dev": "next dev --turbopack",
     "start": "next start",
     "test": "vitest run",

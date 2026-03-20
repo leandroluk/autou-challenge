@@ -46,10 +46,7 @@ export function AnalysisForm({
 
       onSubmit(formData)
 
-      toast.success("Email sent for analysis", {
-        dismissible: true,
-        icon: <MailIcon />
-      })
+      toast.success("Email sent for analysis", { dismissible: true })
     },
   })
 
