@@ -2,7 +2,6 @@
 
 import { ResultSection } from "@/components/molecules/result-section";
 import { AnalysisForm } from "@/components/organisms/analysis-form";
-import { EmailAnalyzerPortProviderEnum } from "@/domain/_shared/ports/email-analyzer";
 import { CategoryEnum } from "@/domain/email/enums";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -21,16 +20,6 @@ export function AnalysisPage() {
     setState({ loading: true, result: null });
     let response: Awaited<ReturnType<typeof fetch>>;
     try {
-      if (!formData.get('provider')) {
-        formData.set('provider', EmailAnalyzerPortProviderEnum.GEMINI_2_5_FLASH);
-      }
-
-      if (!formData.get('api_key')) {
-        toast.error("API Key is required", { dismissible: true });
-        setState(initialState);
-        return;
-      }
-
       response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/email/analyze`, {
         method: "POST",
         body: formData,
@@ -38,7 +27,7 @@ export function AnalysisPage() {
       });
 
       if (!response.ok) {
-        const data = await response.json().catch(() => ({}));
+        const data = await response.json()
         if (response.status === 400) {
           toast.error(response.statusText, {
             dismissible: true,
@@ -53,14 +42,14 @@ export function AnalysisPage() {
           });
           return setState(initialState);
         }
-        throw new Error(data.detail || `HTTP error! status: ${response.status}`);
+        throw new Error(data.detail);
       }
 
       setState({ loading: false, result: await response.json() });
     } catch (e) {
       toast.error("Error analyzing email", {
-        description: e instanceof Error ? e.message : "Please try again.",
         dismissible: true,
+        description: (e as Error).message,
       });
       setState(initialState);
     }

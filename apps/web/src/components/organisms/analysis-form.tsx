@@ -132,11 +132,11 @@ export function AnalysisForm({
                       <Textarea
                         data-testid="analysis-form_textarea_text"
                         id={textField.name}
-                        value={textField.state.value ?? ""}
+                        value={textField.state.value}
                         onBlur={textField.handleBlur}
                         onChange={(e) => textField.handleChange(e.target.value)}
-                        placeholder="Paste the email body here..."
-                        className="max-h-25"
+                        placeholder="Paste your email content here..."
+                        rows={10}
                       />
                       <FieldError errors={textField.state.meta.errors} />
                     </FieldContent>

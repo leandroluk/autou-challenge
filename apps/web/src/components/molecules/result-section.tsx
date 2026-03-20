@@ -3,6 +3,7 @@
 import { Badge } from "@/components/atoms/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/atoms/card"
 import { CategoryEnum } from "@/domain/email/enums"
+import { cn } from "../utils"
 
 export function ResultSection({
   category,
@@ -26,7 +27,9 @@ export function ResultSection({
 
       <CardContent className="space-y-3">
         <h3 className="text-xs font-medium text-muted-foreground">Suggested Reply</h3>
-        <pre className="text-xs rounded-lg bg-muted p-4 leading-relaxed dark:bg-zinc-900/50 text-justify whitespace-pre-wrap break-words">
+        <pre className={cn(`
+          text-xs rounded-lg bg-muted p-4 leading-relaxed dark:bg-zinc-900/50 text-justify
+          whitespace-pre-wrap wrap-break-word`)}>
           {reply}
         </pre>
       </CardContent>
