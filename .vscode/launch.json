@@ -25,25 +25,15 @@
       "request": "launch",
       "url": "http://localhost:3000",
       "webRoot": "${workspaceFolder}/apps/web"
-    },
+    }
+  ],
+  "compounds": [
     {
       "name": "web:full",
-      "type": "node",
-      "request": "launch",
-      "program": "${workspaceFolder}/apps/web/node_modules/next/dist/bin/next",
-      "runtimeArgs": [
-        "--inspect"
-      ],
-      "skipFiles": [
-        "<node_internals>/**"
-      ],
-      "serverReadyAction": {
-        "action": "debugWithEdge",
-        "killOnServerStop": true,
-        "pattern": "- Local:.+(https?://.+)",
-        "uriFormat": "%s",
-        "webRoot": "${workspaceFolder}/apps/web"
-      }
+      "configurations": [
+        "web:server",
+        "web:client"
+      ]
     }
   ]
 }
