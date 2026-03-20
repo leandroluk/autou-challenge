@@ -10,7 +10,6 @@ export default defineConfig({
     setupFiles: ['./vitest.setup.ts'],
     exclude: [
       '**/node_modules/**',
-      '**/test/e2e/**',
       '**/dist/**',
     ],
     coverage: {
