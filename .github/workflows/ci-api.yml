@@ -28,18 +28,16 @@ jobs:
           enable-cache: true
 
       - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version-file: 'apps/api/.python-version'
+        run: uv python install
 
       - name: Install dependencies
-        run: make install
+        run: uv sync
 
       - name: Run Format
-        run: make format
+        run: uv run ruff format .
 
       - name: Run Lint
-        run: make lint
+        run: uv run ruff check .
 
       - name: Run Tests Coverage
         run: make test-cov
