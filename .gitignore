@@ -33,3 +33,9 @@ __pycache__
 
 # web obfuscation files
 apps/web/css-obfuscator
+apps/web/coverage
+next-env.d.ts
+
+# playwright
+playwright-report
+test-results
