@@ -66,8 +66,8 @@ Verifies the backend system's integrity and its availability.
 - [Python 3.13+](https://www.python.org/downloads/)
 - [Node.js](https://nodejs.org/) & [pnpm](https://pnpm.io/)
 - [uv](https://docs.astral.sh/uv/) (Innovative environment and dependency manager for Python)
-- **Make:** Necessary to orchestrate and run `Makefile` commands.
-- **Docker:** Necessary to build and manage the project's containers.
+- [Make](https://www.gnu.org/software/make/): Necessary to orchestrate and run `Makefile` commands.
+- [Docker](https://www.docker.com/): Necessary to build and manage the project's containers.
 - At least one LLM API Key (Gemini, OpenAI, or Anthropic).
 
 ### 🔑 Obtaining API Keys (LLMs)
@@ -88,8 +88,8 @@ git clone https://github.com/leandroluk/autou-challenge.git
 cd autou-challenge
 ```
 
-2. **Configure your Environment Variables:**  
-Rename the `.env.example` files to `.env` in the corresponding folders `apps/api/.env` (optional if you want to redefine the base) and include your `NEXT_PUBLIC_API_URL=http://api.localhost.nip.io` variable in the `apps/web` `.env` (or simply leave default).
+2. **Configure your Environment Variables:**
+Rename the `.env.example` files to `.env` in the corresponding folders `apps/api/.env` (optional if you want to redefine the base) and include your `NEXT_PUBLIC_API_URL=http://api.127.0.0.1.nip.io` variable in the `apps/web` `.env` (or simply leave default).
 
 3. **Start the Containers:**
 ```bash
@@ -98,8 +98,8 @@ docker compose up -d --build
 Wait until images are downloaded and compiled.
 
 4. **All set! Access the application:**
-- **Web Page:** [http://web.localhost.nip.io](http://web.localhost.nip.io)
-- **API Documentation:** [http://api.localhost.nip.io/docs](http://api.localhost.nip.io/docs)
+- **Web Page:** [http://web.127.0.0.1.nip.io](http://web.127.0.0.1.nip.io)
+- **API Documentation:** [http://api.127.0.0.1.nip.io/docs](http://api.127.0.0.1.nip.io/docs)
 
 ---
 
