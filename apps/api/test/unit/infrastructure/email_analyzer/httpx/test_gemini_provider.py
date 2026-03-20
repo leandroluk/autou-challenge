@@ -59,8 +59,9 @@ async def test_analyze_text_http_error(
 
     mock_response.status_code = 500
     mock_response.text = "Internal Server Error Google"
+    mock_response.json.return_value = {}
     mock_response.raise_for_status.side_effect = httpx.HTTPStatusError(
-        "G",
+        "HTTP 500 Internal Server Error Google",
         request=MagicMock(),
         response=mock_response,
     )
@@ -133,8 +134,9 @@ async def test_analyze_file_http_error(
 
     mock_response.status_code = 502
     mock_response.text = "Bad Gateway"
+    mock_response.json.return_value = {}
     mock_response.raise_for_status.side_effect = httpx.HTTPStatusError(
-        "Error", request=MagicMock(), response=mock_response
+        "HTTP 502 Bad Gateway", request=MagicMock(), response=mock_response
     )
 
     provider = HttpxGeminiEmailAnalyzerPortProvider("k", "m")
@@ -162,16 +164,39 @@ async def test_analyze_file_request_error(
 
 @pytest.mark.asyncio
 @patch("src.infrastructure.email_analyzer.httpx.gemini_provider.httpx.AsyncClient")
-async def test_analyze_file__parse_error(
+async def test_analyze_text_http_error_with_message(
     mock_client_class: MagicMock,
     mock_httpx_client: tuple[AsyncMock, MagicMock],
 ) -> None:
     mock_client, mock_response = mock_httpx_client
     mock_client_class.return_value.__aenter__.return_value = mock_client
 
-    mock_response.json.return_value = {"candidates": [{"content": {"parts": [{"text": "invalid json"}]}}]}
+    mock_response.status_code = 400
+    mock_response.json.return_value = {"error": {"message": "Detailed Gemini text error"}}
+    mock_response.raise_for_status.side_effect = httpx.HTTPStatusError(
+        "HTTP 400 Bad Request", request=MagicMock(), response=mock_response
+    )
 
     provider = HttpxGeminiEmailAnalyzerPortProvider("k", "m")
+    with pytest.raises(Exception, match="Detailed Gemini text error"):
+        await provider.analyze_text("fail")
 
-    with pytest.raises(Exception, match="Unexpected model output"):
+
+@pytest.mark.asyncio
+@patch("src.infrastructure.email_analyzer.httpx.gemini_provider.httpx.AsyncClient")
+async def test_analyze_file_http_error_with_message(
+    mock_client_class: MagicMock,
+    mock_httpx_client: tuple[AsyncMock, MagicMock],
+) -> None:
+    mock_client, mock_response = mock_httpx_client
+    mock_client_class.return_value.__aenter__.return_value = mock_client
+
+    mock_response.status_code = 400
+    mock_response.json.return_value = {"error": {"message": "Detailed Gemini file error"}}
+    mock_response.raise_for_status.side_effect = httpx.HTTPStatusError(
+        "HTTP 400 Bad Request", request=MagicMock(), response=mock_response
+    )
+
+    provider = HttpxGeminiEmailAnalyzerPortProvider("k", "m")
+    with pytest.raises(Exception, match="Detailed Gemini file error"):
         await provider.analyze_file(["b64"], "image/png")

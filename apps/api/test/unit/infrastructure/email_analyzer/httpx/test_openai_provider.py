@@ -59,8 +59,9 @@ async def test_analyze_text_http_error(
     # Simulate HTTP Error
     mock_response.status_code = 429
     mock_response.text = "Too Many Requests"
+    mock_response.json.return_value = {}
     mock_response.raise_for_status.side_effect = httpx.HTTPStatusError(
-        "Err", request=MagicMock(), response=mock_response
+        "HTTP 429 Too Many Requests", request=MagicMock(), response=mock_response
     )
 
     provider = HttpxOpenAIEmailAnalyzerPortProvider("k", "m")
@@ -130,14 +131,16 @@ async def test_analyze_file_http_error(
 
     mock_response.status_code = 502
     mock_response.text = "Bad Gateway"
+    mock_response.json.return_value = {}
     mock_response.raise_for_status.side_effect = httpx.HTTPStatusError(
-        "Error", request=MagicMock(), response=mock_response
+        "HTTP 502 Bad Gateway", request=MagicMock(), response=mock_response
     )
 
     provider = HttpxOpenAIEmailAnalyzerPortProvider("k", "m")
 
     with pytest.raises(Exception, match="HTTP 502 Bad Gateway"):
         await provider.analyze_file(["b64"], "image/png")
+
 
 
 @pytest.mark.asyncio
@@ -156,19 +159,44 @@ async def test_analyze_file_request_error(
     with pytest.raises(Exception, match="Request failed: Connection timeout"):
         await provider.analyze_file(["b64"], "image/png")
 
-
 @pytest.mark.asyncio
 @patch("src.infrastructure.email_analyzer.httpx.openai_provider.httpx.AsyncClient")
-async def test_analyze_file__parse_error(
+async def test_analyze_text_http_error_with_message(
     mock_client_class: MagicMock,
     mock_httpx_client: tuple[AsyncMock, MagicMock],
 ) -> None:
     mock_client, mock_response = mock_httpx_client
     mock_client_class.return_value.__aenter__.return_value = mock_client
 
-    mock_response.json.return_value = {"choices": [{"message": {"content": "invalid json"}}]}
+    mock_response.status_code = 400
+    mock_response.json.return_value = {"error": {"message": "Detailed OpenAI error text"}}
+    mock_response.raise_for_status.side_effect = httpx.HTTPStatusError(
+        "HTTP 400 Bad Request",
+        request=MagicMock(),
+        response=mock_response,
+    )
 
     provider = HttpxOpenAIEmailAnalyzerPortProvider("k", "m")
+    with pytest.raises(Exception, match="Detailed OpenAI error text"):
+        await provider.analyze_text("fail")
 
-    with pytest.raises(Exception, match="Unexpected model output"):
+@pytest.mark.asyncio
+@patch("src.infrastructure.email_analyzer.httpx.openai_provider.httpx.AsyncClient")
+async def test_analyze_file_http_error_with_message(
+    mock_client_class: MagicMock,
+    mock_httpx_client: tuple[AsyncMock, MagicMock],
+) -> None:
+    mock_client, mock_response = mock_httpx_client
+    mock_client_class.return_value.__aenter__.return_value = mock_client
+
+    mock_response.status_code = 400
+    mock_response.json.return_value = {"error": {"message": "Detailed OpenAI error file"}}
+    mock_response.raise_for_status.side_effect = httpx.HTTPStatusError(
+        "HTTP 400 Bad Request",
+        request=MagicMock(),
+        response=mock_response,
+    )
+
+    provider = HttpxOpenAIEmailAnalyzerPortProvider("k", "m")
+    with pytest.raises(Exception, match="Detailed OpenAI error file"):
         await provider.analyze_file(["b64"], "image/png")

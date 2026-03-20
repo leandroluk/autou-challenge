@@ -53,8 +53,9 @@ async def test_analyze_text_http_error(
 
     mock_response.status_code = 400
     mock_response.text = "Bad Request"
+    mock_response.json.return_value = {}
     mock_response.raise_for_status.side_effect = httpx.HTTPStatusError(
-        "E",
+        "HTTP 400 Bad Request",
         request=MagicMock(),
         response=mock_response,
     )
@@ -123,16 +124,15 @@ async def test_analyze_file_http_error(
 
     mock_response.status_code = 502
     mock_response.text = "Bad Gateway"
+    mock_response.json.return_value = {}
     mock_response.raise_for_status.side_effect = httpx.HTTPStatusError(
-        "Error", request=MagicMock(), response=mock_response
+        "HTTP 502 Bad Gateway", request=MagicMock(), response=mock_response
     )
 
     provider = HttpxAnthropicEmailAnalyzerPortProvider("k", "m")
 
     with pytest.raises(Exception, match="HTTP 502 Bad Gateway"):
         await provider.analyze_file(["b64"], "image/png")
-
-
 @pytest.mark.asyncio
 @patch("src.infrastructure.email_analyzer.httpx.anthropic_provider.httpx.AsyncClient")
 async def test_analyze_file_request_error(
@@ -149,19 +149,44 @@ async def test_analyze_file_request_error(
     with pytest.raises(Exception, match="Request failed: Connection timeout"):
         await provider.analyze_file(["b64"], "image/png")
 
-
 @pytest.mark.asyncio
 @patch("src.infrastructure.email_analyzer.httpx.anthropic_provider.httpx.AsyncClient")
-async def test_analyze_file__parse_error(
+async def test_analyze_text_http_error_with_message(
     mock_client_class: MagicMock,
     mock_httpx_client: tuple[AsyncMock, MagicMock],
 ) -> None:
     mock_client, mock_response = mock_httpx_client
     mock_client_class.return_value.__aenter__.return_value = mock_client
 
-    mock_response.json.return_value = {"content": [{"text": "invalid json"}]}
+    mock_response.status_code = 400
+    mock_response.json.return_value = {"error": {"message": "Detailed Anthropic error text"}}
+    mock_response.raise_for_status.side_effect = httpx.HTTPStatusError(
+        "HTTP 400 Bad Request",
+        request=MagicMock(),
+        response=mock_response,
+    )
 
     provider = HttpxAnthropicEmailAnalyzerPortProvider("k", "m")
+    with pytest.raises(Exception, match="Detailed Anthropic error text"):
+        await provider.analyze_text("fail")
 
-    with pytest.raises(Exception, match="Unexpected model output"):
+@pytest.mark.asyncio
+@patch("src.infrastructure.email_analyzer.httpx.anthropic_provider.httpx.AsyncClient")
+async def test_analyze_file_http_error_with_message(
+    mock_client_class: MagicMock,
+    mock_httpx_client: tuple[AsyncMock, MagicMock],
+) -> None:
+    mock_client, mock_response = mock_httpx_client
+    mock_client_class.return_value.__aenter__.return_value = mock_client
+
+    mock_response.status_code = 400
+    mock_response.json.return_value = {"error": {"message": "Detailed Anthropic error file"}}
+    mock_response.raise_for_status.side_effect = httpx.HTTPStatusError(
+        "HTTP 400 Bad Request",
+        request=MagicMock(),
+        response=mock_response,
+    )
+
+    provider = HttpxAnthropicEmailAnalyzerPortProvider("k", "m")
+    with pytest.raises(Exception, match="Detailed Anthropic error file"):
         await provider.analyze_file(["b64"], "image/png")

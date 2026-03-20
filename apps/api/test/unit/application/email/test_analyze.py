@@ -41,16 +41,16 @@ def handler(mock_analyzer: MagicMock, mock_converter: AsyncMock) -> EmailAnalyze
 
 
 def test_query_validation_mutually_exclusive() -> None:
-    with pytest.raises(ValidationError):
+    with pytest.raises(ValidationError, match="mutually exclusive"):
         EmailAnalyzeQuery(
             provider=EmailAnalyzerPortProviderEnum.OPENAI_GPT_4O_MINI,
-            api_key="test",
+            api_key="test-api-key",
             file=("test.pdf", b"123"),
             text="test",
         )
 
-    with pytest.raises(ValidationError):
-        EmailAnalyzeQuery(provider=EmailAnalyzerPortProviderEnum.OPENAI_GPT_4O_MINI, api_key="test")
+    with pytest.raises(ValidationError, match="must be provided"):
+        EmailAnalyzeQuery(provider=EmailAnalyzerPortProviderEnum.OPENAI_GPT_4O_MINI, api_key="test-api-key")
 
 
 @pytest.mark.asyncio
@@ -58,13 +58,13 @@ async def test_execute_with_text(
     handler: EmailAnalyzeHandler, mock_analyzer: MagicMock, mock_provider: AsyncMock
 ) -> None:
     query = EmailAnalyzeQuery(
-        provider=EmailAnalyzerPortProviderEnum.OPENAI_GPT_4O_MINI, api_key="test-key", text="hello"
+        provider=EmailAnalyzerPortProviderEnum.OPENAI_GPT_4O_MINI, api_key="test-api-key", text="hello"
     )
     result = await handler.execute(query)
 
     mock_analyzer.get_provider.assert_called_once_with(
         EmailAnalyzerPortProviderEnum.OPENAI_GPT_4O_MINI,
-        "test-key",
+        "test-api-key",
     )
     mock_provider.analyze_text.assert_called_once_with("hello")
     mock_provider.analyze_file.assert_not_called()
@@ -78,7 +78,7 @@ async def test_execute_with_file_pdf(
 ) -> None:
     query = EmailAnalyzeQuery(
         provider=EmailAnalyzerPortProviderEnum.GEMINI_2_5_FLASH,
-        api_key="key",
+        api_key="test-api-key",
         file=(
             "test.pdf",
             b"pdfcontent",
@@ -102,7 +102,7 @@ async def test_execute_with_file_txt_fallback(
     mock_converter.convert.return_value = (["pure text"], "text/plain")
     query = EmailAnalyzeQuery(
         provider=EmailAnalyzerPortProviderEnum.ANTHROPIC_CLAUDE_SONNET_4_5,
-        api_key="key",
+        api_key="test-api-key",
         file=("test.txt", b"txtcontent"),
     )
 
@@ -118,7 +118,7 @@ async def test_execute_with_file_txt_fallback(
 async def test_execute_conversion_error(handler: EmailAnalyzeHandler, mock_converter: AsyncMock) -> None:
     mock_converter.convert.side_effect = Exception("pymupdf failed")
     query = EmailAnalyzeQuery(
-        provider=EmailAnalyzerPortProviderEnum.OPENAI_GPT_4O_MINI, api_key="k", file=("err.pdf", b"x")
+        provider=EmailAnalyzerPortProviderEnum.OPENAI_GPT_4O_MINI, api_key="test-api-key", file=("err.pdf", b"x")
     )
 
     with pytest.raises(EmailConversionError) as exc_info:
@@ -130,7 +130,11 @@ async def test_execute_conversion_error(handler: EmailAnalyzeHandler, mock_conve
 @pytest.mark.asyncio
 async def test_execute_analyzer_error(handler: EmailAnalyzeHandler, mock_provider: AsyncMock) -> None:
     mock_provider.analyze_text.side_effect = Exception("API down")
-    query = EmailAnalyzeQuery(provider=EmailAnalyzerPortProviderEnum.OPENAI_GPT_4O_MINI, api_key="k", text="hi")
+    query = EmailAnalyzeQuery(
+        provider=EmailAnalyzerPortProviderEnum.OPENAI_GPT_4O_MINI,
+        api_key="k" * 10,
+        text="hi",
+    )
 
     with pytest.raises(EmailAnalyzerError) as exc_info:
         await handler.execute(query)
