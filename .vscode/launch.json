@@ -16,7 +16,7 @@
       "name": "web:server",
       "type": "node-terminal",
       "request": "launch",
-      "command": "npm run dev -- --inspect",
+      "command": "npm run dev",
       "cwd": "${workspaceFolder}/apps/web"
     },
     {
