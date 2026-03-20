@@ -23,6 +23,7 @@ class EmailAnalyzeQuery(BaseModel):
     api_key: str = Field(
         description="LLM API key",
         examples=["sk-..."],
+        min_length=10,
     )
     file: tuple[str, bytes] | None = Field(
         description="File name and content in bytes",

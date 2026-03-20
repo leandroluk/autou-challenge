@@ -37,6 +37,6 @@ class HttpConfig(BaseModel):
     docs_path: str = Field(default_factory=_get("HTTP_DOCS_PATH", "/docs"))
     redoc_path: str = Field(default_factory=_get("HTTP_REDOC_PATH", "/redoc"))
     enable_reload: bool = Field(default_factory=_get("HTTP_ENABLE_RELOAD", True))
-    title: str = Field(default_factory=_get("HTTP_TITLE", "AutoU Email Triage API"))
+    title: str = Field(default_factory=_get("HTTP_TITLE", "AutoU Email Analisys API"))
     version: str = Field(default_factory=_get("HTTP_VERSION", "1.0.0"))
     description: str = Field(default_factory=_get("HTTP_DESCRIPTION", "Email triage API - AutoU challenge."))

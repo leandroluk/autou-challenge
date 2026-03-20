@@ -11,6 +11,3 @@ class EmailAnalyzerError(Exception):
     """
     Error raised when an email cannot be analyzed.
     """
-
-    def __init__(self, detail: str) -> None:
-        super().__init__(f"Analyzer failed: {detail}")

@@ -1,5 +1,3 @@
-import json
-import re
 from typing import Any
 
 import httpx
@@ -7,6 +5,7 @@ import httpx
 from src.domain._shared.ports.email_analyzer import EmailAnalyzerPortProvider
 from src.domain.email.enums import CategoryEnum
 from src.infrastructure.email_analyzer.httpx._prompt import EMAIL_ANALYZER_SYSTEM_PROMPT
+from src.infrastructure.email_analyzer.httpx._util import parse_raw_response
 
 
 class HttpxOpenAIEmailAnalyzerPortProvider(EmailAnalyzerPortProvider):
@@ -20,6 +19,13 @@ class HttpxOpenAIEmailAnalyzerPortProvider(EmailAnalyzerPortProvider):
 
     def _headers(self) -> dict[str, str]:
         return {"Authorization": f"Bearer {self._api_key}", "Content-Type": "application/json"}
+
+    def _parse_http_status_error(self, e: httpx.HTTPStatusError) -> str:
+        json_response = e.response.json()
+        error_message = json_response.get("error", {}).get("message")
+        if error_message:
+            return f"{error_message}"
+        return str(e)
 
     async def analyze_text(self, text: str) -> tuple[CategoryEnum, str]:
         try:
@@ -38,10 +44,10 @@ class HttpxOpenAIEmailAnalyzerPortProvider(EmailAnalyzerPortProvider):
                 )
                 response.raise_for_status()
         except httpx.HTTPStatusError as e:
-            raise Exception(f"HTTP {e.response.status_code} {e.response.text}") from e
+            raise Exception(self._parse_http_status_error(e)) from e
         except httpx.RequestError as e:
-            raise Exception(f"Request failed: {e}") from e
-        return self._parse(response.json()["choices"][0]["message"]["content"])
+            raise Exception(f"Request failed: {str(e)}") from e
+        return parse_raw_response(response.json()["choices"][0]["message"]["content"])
 
     async def analyze_file(self, pages_b64: list[str], mime_type: str) -> tuple[CategoryEnum, str]:
         content: list[dict[str, Any]] = [{"type": "text", "text": EMAIL_ANALYZER_SYSTEM_PROMPT}]
@@ -65,16 +71,7 @@ class HttpxOpenAIEmailAnalyzerPortProvider(EmailAnalyzerPortProvider):
                 )
                 response.raise_for_status()
         except httpx.HTTPStatusError as e:
-            raise Exception(f"HTTP {e.response.status_code} {e.response.text}") from e
+            raise Exception(self._parse_http_status_error(e)) from e
         except httpx.RequestError as e:
-            raise Exception(f"Request failed: {e}") from e
-        return self._parse(response.json()["choices"][0]["message"]["content"])
-
-    def _parse(self, raw: str) -> tuple[CategoryEnum, str]:
-        raw = re.sub(r"^```(?:json)?\s*", "", raw.strip())
-        raw = re.sub(r"\s*```$", "", raw)
-        try:
-            data = json.loads(raw)
-            return (CategoryEnum(data["category"]), data["reply"])
-        except (json.JSONDecodeError, KeyError, ValueError) as e:
-            raise Exception(f"Unexpected model output: {e}") from e
+            raise Exception(f"Request failed: {str(e)}") from e
+        return parse_raw_response(response.json()["choices"][0]["message"]["content"])
