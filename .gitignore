@@ -35,7 +35,3 @@ __pycache__
 apps/web/css-obfuscator
 apps/web/coverage
 next-env.d.ts
-
-# playwright
-playwright-report
-test-results
