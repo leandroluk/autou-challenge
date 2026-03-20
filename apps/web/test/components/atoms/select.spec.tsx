@@ -8,9 +8,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/atoms/select"
-import { fireEvent, render, waitFor } from "@testing-library/react"
+import { fireEvent, render, screen, waitFor } from "@testing-library/react"
 import { describe, expect, it, vi } from "vitest"
 
+// Mock para evitar problemas com componentes de scroll do Base UI no JSDOM
 vi.mock("@base-ui/react/select", async () => {
   const actual = await vi.importActual("@base-ui/react/select")
   return {
@@ -46,25 +47,24 @@ describe("components/atoms/select", () => {
   )
 
   it("should render the trigger and value correctly", () => {
-    const { getByTestId, getByText } = render(<TestSelect />)
-    expect(getByTestId("trigger")).toBeInTheDocument()
-    expect(getByText(/apple/i)).toBeInTheDocument()
+    render(<TestSelect />)
+    expect(screen.getByTestId("trigger")).toBeInTheDocument()
+    expect(screen.getByText(/apple/i)).toBeInTheDocument()
   })
 
   it("should open content and display items on click", async () => {
-    const { getByTestId, getByText, getByRole } = render(<TestSelect />)
-    fireEvent.click(getByTestId("trigger"))
+    render(<TestSelect />)
+    fireEvent.click(screen.getByTestId("trigger"))
 
-    await waitFor(() => {
-      expect(getByText("Fruits")).toBeInTheDocument()
-      expect(getByRole("option", { name: "Orange" })).toBeInTheDocument()
-    })
+    // findByRole lida com o estado assíncrono do portal/positioner
+    expect(await screen.findByText("Fruits")).toBeInTheDocument()
+    expect(screen.getByRole("option", { name: "Orange" })).toBeInTheDocument()
   })
 
   it("should change value when an item is selected", async () => {
     const onValueChange = vi.fn()
 
-    const { getByTestId, findByRole } = render(
+    render(
       <Select onValueChange={onValueChange}>
         <SelectTrigger data-testid="trigger">
           <SelectValue />
@@ -75,9 +75,9 @@ describe("components/atoms/select", () => {
       </Select>
     )
 
-    fireEvent.click(getByTestId("trigger"))
+    fireEvent.click(screen.getByTestId("trigger"))
 
-    const option = await findByRole("option", { name: /orange/i })
+    const option = await screen.findByRole("option", { name: /orange/i })
     fireEvent.click(option)
 
     expect(onValueChange).toHaveBeenCalledWith("orange", expect.anything())
@@ -87,13 +87,14 @@ describe("components/atoms/select", () => {
     ["default", "data-[size=default]:h-8"],
     ["sm", "data-[size=sm]:h-7"],
   ])("should apply size %s to trigger", (size, expectedClass) => {
-    const { getByTestId } = render(<TestSelect triggerProps={{ size: size as any }} />)
-    expect(getByTestId("trigger")).toHaveClass(expectedClass)
-    expect(getByTestId("trigger")).toHaveAttribute("data-size", size)
+    render(<TestSelect triggerProps={{ size: size as any }} />)
+    const trigger = screen.getByTestId("trigger")
+    expect(trigger).toHaveClass(expectedClass)
+    expect(trigger).toHaveAttribute("data-size", size)
   })
 
   it("should apply custom classNames to all sub-components", async () => {
-    const { getByTestId } = render(
+    render(
       <Select open>
         <SelectTrigger className="custom-trigger" data-testid="trigger">
           <SelectValue className="custom-value" data-testid="value" />
@@ -108,26 +109,29 @@ describe("components/atoms/select", () => {
       </Select>
     )
 
-    expect(getByTestId("trigger")).toHaveClass("custom-trigger")
-    expect(getByTestId("value")).toHaveClass("custom-value")
-    expect(getByTestId("content")).toHaveClass("custom-content")
-    expect(getByTestId("group")).toHaveClass("custom-group")
-    expect(getByTestId("label")).toHaveClass("custom-label")
-    expect(getByTestId("item")).toHaveClass("custom-item")
-    expect(getByTestId("sep")).toHaveClass("custom-sep")
+    expect(screen.getByTestId("trigger")).toHaveClass("custom-trigger")
+    expect(screen.getByTestId("value")).toHaveClass("custom-value")
+
+    // Elementos dentro do Portal/Positioner devem ser aguardados
+    const content = await screen.findByTestId("content")
+    expect(content).toHaveClass("custom-content")
+    expect(screen.getByTestId("group")).toHaveClass("custom-group")
+    expect(screen.getByTestId("label")).toHaveClass("custom-label")
+    expect(screen.getByTestId("item")).toHaveClass("custom-item")
+    expect(screen.getByTestId("sep")).toHaveClass("custom-sep")
   })
 
   it("should render disabled item correctly", async () => {
-    const { getByTestId, getByRole } = render(<TestSelect />)
-    fireEvent.click(getByTestId("trigger"))
+    render(<TestSelect />)
+    fireEvent.click(screen.getByTestId("trigger"))
 
-    const disabledItem = await waitFor(() => getByRole("option", { name: "Banana" }))
+    const disabledItem = await screen.findByRole("option", { name: "Banana" })
     expect(disabledItem).toHaveAttribute("data-disabled", "")
     expect(disabledItem).toHaveClass("data-disabled:opacity-50")
   })
 
-  it("should forward positioner props to SelectContent", () => {
-    const { getByTestId } = render(
+  it("should forward positioner props to SelectContent", async () => {
+    render(
       <Select open>
         <SelectTrigger data-testid="trigger" />
         <SelectContent
@@ -138,7 +142,9 @@ describe("components/atoms/select", () => {
         />
       </Select>
     )
-    const content = getByTestId("content")
+
+    // Aguarda o positioner calcular e montar
+    const content = await screen.findByTestId("content")
     expect(content).toHaveAttribute("data-align-trigger", "false")
     expect(content).toHaveAttribute("data-side", "top")
   })
@@ -155,7 +161,6 @@ describe("components/atoms/select", () => {
       </Select>
     )
 
-    // SelectContent renderiza em um Portal, então buscamos no document
     await waitFor(() => {
       const upButton = document.querySelector("[data-slot='select-scroll-up-button']")
       const downButton = document.querySelector("[data-slot='select-scroll-down-button']")

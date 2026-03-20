@@ -1,5 +1,5 @@
 import RootLayout from "@/app/layout";
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
 vi.mock("next/font/google", () => ({
@@ -9,12 +9,12 @@ vi.mock("next/font/google", () => ({
 }))
 
 describe("app/layout", () => {
-  it("should render layout", () => {
-    const { container } = render(
-      <RootLayout>
-        <div>test</div>
-      </RootLayout>
-    )
-    expect(container).toBeDefined()
-  })
-})
+  it("should render layout infrastructure (coverage and content)", () => {
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => { });
+    render(<RootLayout><div data-testid="children">test</div></RootLayout>);
+    expect(screen.getByTestId("children")).toBeInTheDocument();
+    const result = RootLayout({ children: <div /> });
+    expect(result.type).toBe("html");
+    consoleSpy.mockRestore();
+  });
+});

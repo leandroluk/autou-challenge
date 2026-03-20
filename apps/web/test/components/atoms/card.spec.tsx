@@ -58,7 +58,9 @@ describe("components/atoms/card", () => {
   it("should apply rounding to first-child images", () => {
     const { container } = render(
       <Card>
-        <img src="test.jpg" alt="test" />
+        <picture>
+          <img src="/test.jpg" alt="test" />
+        </picture>
       </Card>
     )
     const card = container.firstChild as HTMLElement
