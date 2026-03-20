@@ -42,23 +42,21 @@ export function AnalysisPage() {
         if (response.status === 400) {
           toast.error(response.statusText, {
             dismissible: true,
-            description: <pre className="text-xs">{data.detail.split("{")[0]}</pre>
+            description: <pre className="text-xs whitespace-pre-wrap">{data.detail}</pre>
           });
           return setState(initialState);
         }
         if (response.status === 502) {
           toast.error("Bad Gateway. Please try again later.", {
             dismissible: true,
-            description: <pre className="text-xs">{data.detail.split("{")[0]}</pre>
+            description: <pre className="text-xs whitespace-pre-wrap">{data.detail}</pre>
           });
           return setState(initialState);
         }
-        throw new Error(data.detail || data.message || `HTTP error! status: ${response.status}`);
+        throw new Error(data.detail || `HTTP error! status: ${response.status}`);
       }
 
-      const data = await response.json();
-      setState({ loading: false, result: data });
-
+      setState({ loading: false, result: await response.json() });
     } catch (e) {
       toast.error("Error analyzing email", {
         description: e instanceof Error ? e.message : "Please try again.",
